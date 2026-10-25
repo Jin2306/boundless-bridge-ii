@@ -45,7 +45,7 @@ export type BuddyAiResult = { ok: true; reply: BuddyAiReply } | { ok: false; err
 const FAIL = "AI Buddy isn't available right now. Practice replies still work.";
 
 export async function askBuddyReply(data: BuddyAiInput): Promise<BuddyAiResult> {
-  const key = process.env.LOVABLE_API_KEY;
+  const key = process.env["LOVABLE_API_KEY"];
   if (!key) return { ok: false, error: FAIL };
 
   let instructions = `${BASE_RULES}\n${FIELDS}`;

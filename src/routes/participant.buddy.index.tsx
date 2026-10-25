@@ -102,7 +102,7 @@ function BuddyPage() {
       live = false;
       reply = mockReply(text, { memoryOn: settings.memory, turn: next.filter((m) => m.role === "user").length });
     }
-    const all = [...next, { id: uid(), role: "buddy", ...reply }];
+    const all: BuddyMsg[] = [...next, { id: uid(), role: "buddy", ...reply }];
     setMessages(all);
     setMode(live ? "live" : "practice");
     setThinking(false);
