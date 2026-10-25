@@ -1,4 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { clearBuddyData, useBuddySettings, useConversations, type BuddySettings } from "@/lib/buddy";
 import { Shell, PageTitle } from "@/components/Shell";
 import { clearAllLocalData, useRole, useSettings, type Settings } from "@/lib/store";
 
@@ -21,6 +22,38 @@ const TOGGLES: { k: keyof Settings; label: string }[] = [
   { k: "audio", label: "Audio guidance (Listen button)" },
   { k: "aiConsent", label: "Allow Practice Guide (AI)" },
 ];
+
+const BUDDY_TOGGLES: { k: keyof BuddySettings; label: string; hint: string }[] = [
+  { k: "enabled", label: "Enable AI Buddy", hint: "Show the AI Buddy chat." },
+  { k: "voiceReplies", label: "Read replies aloud", hint: "Voice Mode: AI Buddy speaks its replies." },
+  { k: "memory", label: "Long-term memory", hint: "AI Buddy always asks before remembering anything." },
+  { k: "history", label: "Save conversation history", hint: "Past messages, kept on this device only." },
+];
+
+function BuddySection() {
+  const [b, setB] = useBuddySettings();
+  const [, setConvos] = useConversations();
+  return (
+    <section className="mt-4 card-soft p-5">
+      <h2 className="text-xl font-semibold text-primary">AI Buddy</h2>
+      <p className="mt-1 text-base text-muted-foreground">Conversation history = past messages. Memory = specific things you approved for later. Both stay on this device and are never shared with supporters.</p>
+      <div className="mt-3 grid gap-2">
+        {BUDDY_TOGGLES.map((t) => (
+          <label key={t.k} className="flex min-h-14 cursor-pointer items-center justify-between gap-3 rounded-xl border-2 border-border px-4 py-2 text-lg">
+            <span>{t.label}<span className="block text-sm text-muted-foreground">{t.hint}</span></span>
+            <input type="checkbox" className="size-6 accent-[var(--color-primary)]" checked={b[t.k]}
+              onChange={(e) => setB({ ...b, [t.k]: e.target.checked })} />
+          </label>
+        ))}
+      </div>
+      <div className="mt-3 grid gap-2">
+        <Link to="/participant/buddy/memory" className="btn-big border-2 border-primary text-primary">Manage saved memories</Link>
+        <button onClick={() => { if (confirm("Delete all saved AI Buddy conversations?")) setConvos([]); }} className="btn-big border-2 border-border text-primary">Delete conversation history</button>
+        <button onClick={() => { if (confirm("Delete all AI Buddy conversations, memories, and settings?")) clearBuddyData(); }} className="btn-big border-2 border-destructive text-destructive">Delete all AI Buddy data</button>
+      </div>
+    </section>
+  );
+}
 
 function SettingsPage() {
   const [settings, setSettings] = useSettings();
@@ -53,6 +86,7 @@ function SettingsPage() {
           ))}
         </div>
       </section>
+      {role !== "supporter" && <BuddySection />}
       <section className="mt-4 card-soft p-5">
         <h2 className="text-xl font-semibold text-primary">Privacy</h2>
         <ul className="mt-2 list-disc space-y-1 pl-6 text-lg">

@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Home, Flower2, Users, BookOpen, HeartHandshake, LifeBuoy, Settings, WifiOff, ArrowLeft } from "lucide-react";
+import { Home, MessageCircleHeart, Flower2, Users, BookOpen, HeartHandshake, LifeBuoy, Settings, WifiOff, ArrowLeft } from "lucide-react";
 
 type NavItem = { to: string; label: string; icon: typeof Home };
 
 const PARTICIPANT_NAV: NavItem[] = [
   { to: "/participant", label: "Home", icon: Home },
   { to: "/participant/practices", label: "Practices", icon: Flower2 },
+  { to: "/participant/buddy", label: "AI Buddy", icon: MessageCircleHeart },
   { to: "/participant/connect", label: "Connect", icon: Users },
 ];
 const SUPPORTER_NAV: NavItem[] = [

@@ -78,6 +78,10 @@ export function markCompleted(id: string) {
 }
 
 export function clearAllLocalData() {
+  Object.keys(window.localStorage).filter((k) => k.startsWith("bb.buddy.")).forEach((k) => {
+    window.localStorage.removeItem(k);
+    window.dispatchEvent(new CustomEvent("bb-store", { detail: k }));
+  });
   Object.values(KEYS).forEach((k) => window.localStorage.removeItem(k));
   Object.values(KEYS).forEach((k) => window.dispatchEvent(new CustomEvent("bb-store", { detail: k })));
 }
