@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as GuideRouteImport } from './routes/guide'
+import { Route as PhoneDemoRouteImport } from './routes/phone-demo'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ParticipantIndexRouteImport } from './routes/participant.index'
 import { Route as ParticipantConnectRouteImport } from './routes/participant.connect'
@@ -43,6 +44,11 @@ const DemoRoute = DemoRouteImport.update({
 const GuideRoute = GuideRouteImport.update({
   id: '/guide',
   path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhoneDemoRoute = PhoneDemoRouteImport.update({
+  id: '/phone-demo',
+  path: '/phone-demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/demo': typeof DemoRoute
   '/guide': typeof GuideRoute
+  '/phone-demo': typeof PhoneDemoRoute
   '/settings': typeof SettingsRoute
   '/participant/connect': typeof ParticipantConnectRoute
   '/participant/invite': typeof ParticipantInviteRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo': typeof DemoRoute
   '/guide': typeof GuideRoute
+  '/phone-demo': typeof PhoneDemoRoute
   '/settings': typeof SettingsRoute
   '/participant/connect': typeof ParticipantConnectRoute
   '/participant/invite': typeof ParticipantInviteRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/demo': typeof DemoRoute
   '/guide': typeof GuideRoute
+  '/phone-demo': typeof PhoneDemoRoute
   '/settings': typeof SettingsRoute
   '/participant/connect': typeof ParticipantConnectRoute
   '/participant/invite': typeof ParticipantInviteRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo'
     | '/guide'
+    | '/phone-demo'
     | '/settings'
     | '/participant/connect'
     | '/participant/invite'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo'
     | '/guide'
+    | '/phone-demo'
     | '/settings'
     | '/participant/connect'
     | '/participant/invite'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo'
     | '/guide'
+    | '/phone-demo'
     | '/settings'
     | '/participant/connect'
     | '/participant/invite'
@@ -271,6 +283,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DemoRoute: typeof DemoRoute
   GuideRoute: typeof GuideRoute
+  PhoneDemoRoute: typeof PhoneDemoRoute
   SettingsRoute: typeof SettingsRoute
   ParticipantConnectRoute: typeof ParticipantConnectRoute
   ParticipantInviteRoute: typeof ParticipantInviteRoute
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/guide'
       fullPath: '/guide'
       preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/phone-demo': {
+      id: '/phone-demo'
+      path: '/phone-demo'
+      fullPath: '/phone-demo'
+      preLoaderRoute: typeof PhoneDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -439,6 +459,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DemoRoute: DemoRoute,
   GuideRoute: GuideRoute,
+  PhoneDemoRoute: PhoneDemoRoute,
   SettingsRoute: SettingsRoute,
   ParticipantConnectRoute: ParticipantConnectRoute,
   ParticipantInviteRoute: ParticipantInviteRoute,

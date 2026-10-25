@@ -9,7 +9,7 @@ export const Route = createFileRoute("/demo")({
   head: () => ({
     meta: [
       { title: "Demo Mode — Boundless Bridge" },
-      { name: "description", content: "Four guided scenarios: participant, supporter, consent-based connection, and AI Buddy." },
+      { name: "description", content: "Five guided scenarios: participant, supporter, consent-based connection, AI Buddy, and the phone line." },
       { property: "og:title", content: "Boundless Bridge Demo" },
       { property: "og:description", content: "See both experiences and how the participant stays in control." },
     ],
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/demo")({
   component: Demo,
 });
 
-const TABS = ["1 · Participant", "2 · Family", "3 · Connecting", "4 · AI Buddy"] as const;
+const TABS = ["1 · Participant", "2 · Family", "3 · Connecting", "4 · AI Buddy", "5 · Phone line"] as const;
 
 function Demo() {
   const [tab, setTab] = useState(0);
@@ -25,7 +25,7 @@ function Demo() {
   const [, setRole] = useRole();
   return (
     <Shell back="/">
-      <PageTitle title="Demo Mode" subtitle="Fictional people only. Walk through four scenarios." />
+      <PageTitle title="Demo Mode" subtitle="Fictional people only. Walk through five scenarios." />
       <div role="tablist" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {TABS.map((t, i) => (
           <button key={t} role="tab" aria-selected={tab === i} onClick={() => setTab(i)}
@@ -72,6 +72,14 @@ function Demo() {
             <Step n={4}>Say: "Can we do something to help me feel calmer?" → Start Grounding</Step>
             <Step n={5}>Tap Listen on a reply, or the microphone to speak</Step>
             <Link to="/participant/buddy" onClick={() => setRole("participant")} className="btn-big mt-4 w-full bg-sage text-sage-foreground">Open AI Buddy as Jordan</Link>
+          </Scenario>
+        )}
+        {tab === 4 && (
+          <Scenario title="Phone line (simulated)" story="Ray doesn't have a smartphone. He calls the AI Buddy phone number from a basic phone. This demo simulates that call in the browser — no real phone service is connected.">
+            <Step n={1}>Tap the green Call button and listen to the greeting</Step>
+            <Step n={2}>Say (or type): "I had a rough day at work."</Step>
+            <Step n={3}>Hear AI Buddy answer, then say "goodbye" to hang up</Step>
+            <Link to="/phone-demo" className="btn-big mt-4 w-full bg-sage text-sage-foreground">Open the phone line demo</Link>
           </Scenario>
         )}
       </div>
