@@ -23,6 +23,8 @@ import { Route as SupporterIndexRouteImport } from './routes/supporter.index'
 import { Route as SupporterConnectRouteImport } from './routes/supporter.connect'
 import { Route as SupporterLearnRouteImport } from './routes/supporter.learn'
 import { Route as SupporterResourcesRouteImport } from './routes/supporter.resources'
+import { Route as ParticipantBuddyIndexRouteImport } from './routes/participant.buddy.index'
+import { Route as ParticipantBuddyMemoryRouteImport } from './routes/participant.buddy.memory'
 import { Route as ParticipantPracticeIdRouteImport } from './routes/participant.practice.$id'
 import { Route as SupporterTogetherIndexRouteImport } from './routes/supporter.together.index'
 import { Route as SupporterTogetherIdRouteImport } from './routes/supporter.together.$id'
@@ -97,6 +99,16 @@ const SupporterResourcesRoute = SupporterResourcesRouteImport.update({
   path: '/supporter/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParticipantBuddyIndexRoute = ParticipantBuddyIndexRouteImport.update({
+  id: '/participant/buddy/',
+  path: '/participant/buddy/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParticipantBuddyMemoryRoute = ParticipantBuddyMemoryRouteImport.update({
+  id: '/participant/buddy/memory',
+  path: '/participant/buddy/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ParticipantPracticeIdRoute = ParticipantPracticeIdRouteImport.update({
   id: '/participant/practice/$id',
   path: '/participant/practice/$id',
@@ -128,8 +140,10 @@ export interface FileRoutesByFullPath {
   '/supporter/resources': typeof SupporterResourcesRoute
   '/participant/': typeof ParticipantIndexRoute
   '/supporter/': typeof SupporterIndexRoute
+  '/participant/buddy/memory': typeof ParticipantBuddyMemoryRoute
   '/participant/practice/$id': typeof ParticipantPracticeIdRoute
   '/supporter/together/$id': typeof SupporterTogetherIdRoute
+  '/participant/buddy/': typeof ParticipantBuddyIndexRoute
   '/supporter/together/': typeof SupporterTogetherIndexRoute
 }
 export interface FileRoutesByTo {
@@ -147,8 +161,10 @@ export interface FileRoutesByTo {
   '/supporter/resources': typeof SupporterResourcesRoute
   '/participant': typeof ParticipantIndexRoute
   '/supporter': typeof SupporterIndexRoute
+  '/participant/buddy/memory': typeof ParticipantBuddyMemoryRoute
   '/participant/practice/$id': typeof ParticipantPracticeIdRoute
   '/supporter/together/$id': typeof SupporterTogetherIdRoute
+  '/participant/buddy': typeof ParticipantBuddyIndexRoute
   '/supporter/together': typeof SupporterTogetherIndexRoute
 }
 export interface FileRoutesById {
@@ -167,8 +183,10 @@ export interface FileRoutesById {
   '/supporter/resources': typeof SupporterResourcesRoute
   '/participant/': typeof ParticipantIndexRoute
   '/supporter/': typeof SupporterIndexRoute
+  '/participant/buddy/memory': typeof ParticipantBuddyMemoryRoute
   '/participant/practice/$id': typeof ParticipantPracticeIdRoute
   '/supporter/together/$id': typeof SupporterTogetherIdRoute
+  '/participant/buddy/': typeof ParticipantBuddyIndexRoute
   '/supporter/together/': typeof SupporterTogetherIndexRoute
 }
 export interface FileRouteTypes {
@@ -188,8 +206,10 @@ export interface FileRouteTypes {
     | '/supporter/resources'
     | '/participant/'
     | '/supporter/'
+    | '/participant/buddy/memory'
     | '/participant/practice/$id'
     | '/supporter/together/$id'
+    | '/participant/buddy/'
     | '/supporter/together/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -207,8 +227,10 @@ export interface FileRouteTypes {
     | '/supporter/resources'
     | '/participant'
     | '/supporter'
+    | '/participant/buddy/memory'
     | '/participant/practice/$id'
     | '/supporter/together/$id'
+    | '/participant/buddy'
     | '/supporter/together'
   id:
     | '__root__'
@@ -226,8 +248,10 @@ export interface FileRouteTypes {
     | '/supporter/resources'
     | '/participant/'
     | '/supporter/'
+    | '/participant/buddy/memory'
     | '/participant/practice/$id'
     | '/supporter/together/$id'
+    | '/participant/buddy/'
     | '/supporter/together/'
   fileRoutesById: FileRoutesById
 }
@@ -246,8 +270,10 @@ export interface RootRouteChildren {
   SupporterResourcesRoute: typeof SupporterResourcesRoute
   ParticipantIndexRoute: typeof ParticipantIndexRoute
   SupporterIndexRoute: typeof SupporterIndexRoute
+  ParticipantBuddyMemoryRoute: typeof ParticipantBuddyMemoryRoute
   ParticipantPracticeIdRoute: typeof ParticipantPracticeIdRoute
   SupporterTogetherIdRoute: typeof SupporterTogetherIdRoute
+  ParticipantBuddyIndexRoute: typeof ParticipantBuddyIndexRoute
   SupporterTogetherIndexRoute: typeof SupporterTogetherIndexRoute
 }
 
@@ -351,6 +377,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupporterResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/participant/buddy/': {
+      id: '/participant/buddy/'
+      path: '/participant/buddy'
+      fullPath: '/participant/buddy/'
+      preLoaderRoute: typeof ParticipantBuddyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/participant/buddy/memory': {
+      id: '/participant/buddy/memory'
+      path: '/participant/buddy/memory'
+      fullPath: '/participant/buddy/memory'
+      preLoaderRoute: typeof ParticipantBuddyMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/participant/practice/$id': {
       id: '/participant/practice/$id'
       path: '/participant/practice/$id'
@@ -390,8 +430,10 @@ const rootRouteChildren: RootRouteChildren = {
   SupporterResourcesRoute: SupporterResourcesRoute,
   ParticipantIndexRoute: ParticipantIndexRoute,
   SupporterIndexRoute: SupporterIndexRoute,
+  ParticipantBuddyMemoryRoute: ParticipantBuddyMemoryRoute,
   ParticipantPracticeIdRoute: ParticipantPracticeIdRoute,
   SupporterTogetherIdRoute: SupporterTogetherIdRoute,
+  ParticipantBuddyIndexRoute: ParticipantBuddyIndexRoute,
   SupporterTogetherIndexRoute: SupporterTogetherIndexRoute,
 }
 export const routeTree = rootRouteImport

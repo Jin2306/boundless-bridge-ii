@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Heart, Flower2, Users, BookHeart, Sparkles } from "lucide-react";
+import { Heart, Flower2, Users, BookHeart, Sparkles, MessageCircleHeart } from "lucide-react";
 import { Shell } from "@/components/Shell";
 
 export const Route = createFileRoute("/participant/")({
@@ -36,6 +36,14 @@ function ParticipantHome() {
         <Big to="/participant/practices" icon={Flower2} title="My Practices" desc="Continue what you know." cls="bg-primary text-primary-foreground" />
         <Big to="/participant/connect" icon={Users} title="Talk to Someone" desc="Find human support." cls="bg-gold text-gold-foreground" />
       </div>
+      <Link to="/participant/buddy" className="mt-5 flex items-center gap-4 rounded-3xl border-2 border-sage bg-card p-5 shadow-soft transition active:scale-[0.99]">
+        <MessageCircleHeart className="size-10 shrink-0 text-sage" aria-hidden />
+        <span className="flex-1">
+          <span className="block font-display text-xl font-semibold text-primary">Meet Your AI Buddy</span>
+          <span className="block text-base text-muted-foreground">Want to talk? I'm here to listen.</span>
+        </span>
+        <span className="rounded-full bg-sage px-4 py-2 text-base font-semibold text-sage-foreground">Talk to AI Buddy</span>
+      </Link>
       <div className="mt-6 flex justify-center gap-6">
         <Link to="/participant/journey" className="flex min-h-12 items-center gap-2 font-semibold text-primary"><BookHeart className="size-5" /> My Journey</Link>
         <Link to="/guide" className="flex min-h-12 items-center gap-2 font-semibold text-primary"><Sparkles className="size-5" /> Practice Guide</Link>

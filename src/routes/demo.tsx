@@ -9,7 +9,7 @@ export const Route = createFileRoute("/demo")({
   head: () => ({
     meta: [
       { title: "Demo Mode — Boundless Bridge" },
-      { name: "description", content: "Three guided scenarios showing participant, supporter, and consent-based connection." },
+      { name: "description", content: "Four guided scenarios: participant, supporter, consent-based connection, and AI Buddy." },
       { property: "og:title", content: "Boundless Bridge Demo" },
       { property: "og:description", content: "See both experiences and how the participant stays in control." },
     ],
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/demo")({
   component: Demo,
 });
 
-const TABS = ["1 · Participant", "2 · Family", "3 · Connecting"] as const;
+const TABS = ["1 · Participant", "2 · Family", "3 · Connecting", "4 · AI Buddy"] as const;
 
 function Demo() {
   const [tab, setTab] = useState(0);
@@ -25,8 +25,8 @@ function Demo() {
   const [, setRole] = useRole();
   return (
     <Shell back="/">
-      <PageTitle title="Demo Mode" subtitle="Fictional people only. Walk through three scenarios." />
-      <div role="tablist" className="grid grid-cols-3 gap-2">
+      <PageTitle title="Demo Mode" subtitle="Fictional people only. Walk through four scenarios." />
+      <div role="tablist" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {TABS.map((t, i) => (
           <button key={t} role="tab" aria-selected={tab === i} onClick={() => setTab(i)}
             className={`min-h-14 rounded-2xl px-2 text-base font-bold ${tab === i ? "bg-primary text-primary-foreground" : "bg-card text-primary border-2 border-border"}`}>
@@ -63,6 +63,16 @@ function Demo() {
             <ParticipantShare />
             <div className="mt-4"><ConnectionFlow view="both" /></div>
           </div>
+        )}
+        {tab === 3 && (
+          <Scenario title="AI Buddy" story="Jordan had a hard day looking for work and opens AI Buddy. (Practice mode: replies are scripted, not live AI.)">
+            <Step n={1}>Say: "I've been trying to find a job, but I keep getting rejected."</Step>
+            <Step n={2}>Open the memory page and turn memory on</Step>
+            <Step n={3}>Say: "Remember that my goal is to find a stable job." → tap Remember This</Step>
+            <Step n={4}>Say: "Can we do something to help me feel calmer?" → Start Grounding</Step>
+            <Step n={5}>Tap Listen on a reply, or the microphone to speak</Step>
+            <Link to="/participant/buddy" onClick={() => setRole("participant")} className="btn-big mt-4 w-full bg-sage text-sage-foreground">Open AI Buddy as Jordan</Link>
+          </Scenario>
         )}
       </div>
 
