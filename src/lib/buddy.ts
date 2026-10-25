@@ -23,6 +23,7 @@ export type BuddySettings = {
   history: boolean; // save conversations on this device
   voiceReplies: boolean; // auto-read replies aloud
   voiceConsent: boolean; // agreed to browser speech recognition
+  offlineAi: boolean; // use on-device Gemma when there's no internet
 };
 
 export const BUDDY_KEYS = {
@@ -31,7 +32,7 @@ export const BUDDY_KEYS = {
   conversations: "bb.buddy.conversations",
 } as const;
 
-export const BUDDY_DEFAULTS: BuddySettings = { enabled: true, memory: false, history: true, voiceReplies: false, voiceConsent: false };
+export const BUDDY_DEFAULTS: BuddySettings = { enabled: true, memory: false, history: true, voiceReplies: false, voiceConsent: false, offlineAi: false };
 
 export const useBuddySettings = () => useLocal<BuddySettings>(BUDDY_KEYS.settings, BUDDY_DEFAULTS);
 export const useMemories = () => useLocal<Memory[]>(BUDDY_KEYS.memories, []);

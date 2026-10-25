@@ -36,7 +36,7 @@ function BuddyPage() {
   const [messages, setMessages] = useState<BuddyMsg[]>([welcomeMsg()]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
-  const [mode, setMode] = useState<"live" | "practice">("live");
+  const [mode, setMode] = useState<"live" | "device" | "practice">("live");
   const [showHistory, setShowHistory] = useState(false);
   const [handled, setHandled] = useState<Record<string, boolean>>({});
   const [recording, setRecording] = useState(false);
@@ -80,31 +80,39 @@ function BuddyPage() {
     setMessages(next);
     setInput("");
     setThinking(true);
-    let reply: Omit<BuddyMsg, "id" | "role">;
-    let live = true;
-    try {
-      const res = await askBuddy({
-        data: {
-          message: text,
-          history: next.slice(0, -1).filter((m) => m.id !== "welcome").slice(-8).map((m) => ({ role: m.role, text: m.text })),
-          memories: settings.memory ? memories.slice(0, 10).map((m) => m.text) : [],
-          memoryOn: settings.memory,
-        },
-      });
-      if (res.ok) {
-        reply = res.reply;
-      } else {
-        toast.error(res.error);
-        live = false;
-        reply = mockReply(text, { memoryOn: settings.memory, turn: next.filter((m) => m.role === "user").length });
+    let reply: Omit<BuddyMsg, "id" | "role"> | null = null;
+    let nextMode: "live" | "device" | "practice" = "live";
+    const history = next.slice(0, -1).filter((m) => m.id !== "welcome").slice(-8).map((m) => ({ role: m.role, text: m.text }));
+    const mems = settings.memory ? memories.slice(0, 10).map((m) => m.text) : [];
+    const turn = next.filter((m) => m.role === "user").length;
+    const offline = typeof navigator !== "undefined" && navigator.onLine === false;
+    if (!offline) {
+      try {
+        const res = await askBuddy({ data: { message: text, history, memories: mems, memoryOn: settings.memory } });
+        if (res.ok) reply = res.reply;
+        else if (!settings.offlineAi) toast.error(res.error);
+      } catch {
+        /* network failure: try on-device below */
       }
-    } catch {
-      live = false;
-      reply = mockReply(text, { memoryOn: settings.memory, turn: next.filter((m) => m.role === "user").length });
+    }
+    if (!reply && settings.offlineAi) {
+      try {
+        const { gemmaReply, gemmaSupported } = await import("@/lib/gemma");
+        if (gemmaSupported()) {
+          reply = await gemmaReply(text, { history, memories: mems, memoryOn: settings.memory, turn });
+          nextMode = "device";
+        }
+      } catch {
+        /* fall through to scripted */
+      }
+    }
+    if (!reply) {
+      nextMode = "practice";
+      reply = mockReply(text, { memoryOn: settings.memory, turn });
     }
     const all: BuddyMsg[] = [...next, { id: uid(), role: "buddy", ...reply }];
     setMessages(all);
-    setMode(live ? "live" : "practice");
+    setMode(nextMode);
     setThinking(false);
     persist(all);
     if (settings.voiceReplies) play(all[all.length - 1]!);
@@ -177,6 +185,10 @@ function BuddyPage() {
       {mode === "live" ? (
         <p className="mt-2 rounded-xl bg-sage/30 px-3 py-2 text-sm font-semibold text-foreground" role="note">
           Live AI: your messages are sent to write replies. They stay on this device{settings.memory ? ", and saved memory notes help write them" : ""} — never shared with supporters.
+        </p>
+      ) : mode === "device" ? (
+        <p className="mt-2 rounded-xl bg-sage/30 px-3 py-2 text-sm font-semibold text-foreground" role="note">
+          On-device AI (Gemma): no internet needed. Your messages and memories never leave this phone.
         </p>
       ) : (
         <p className="mt-2 rounded-xl bg-gold/30 px-3 py-2 text-sm font-semibold text-foreground" role="note">
