@@ -9,7 +9,7 @@ export const Route = createFileRoute("/demo")({
   head: () => ({
     meta: [
       { title: "Demo Mode — Boundless Bridge" },
-      { name: "description", content: "Three guided scenarios showing participant, supporter, and consent-based connection." },
+      { name: "description", content: "Four guided scenarios: participant, supporter, consent-based connection, and AI Buddy." },
       { property: "og:title", content: "Boundless Bridge Demo" },
       { property: "og:description", content: "See both experiences and how the participant stays in control." },
     ],
@@ -25,7 +25,7 @@ function Demo() {
   const [, setRole] = useRole();
   return (
     <Shell back="/">
-      <PageTitle title="Demo Mode" subtitle="Fictional people only. Walk through three scenarios." />
+      <PageTitle title="Demo Mode" subtitle="Fictional people only. Walk through four scenarios." />
       <div role="tablist" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {TABS.map((t, i) => (
           <button key={t} role="tab" aria-selected={tab === i} onClick={() => setTab(i)}
