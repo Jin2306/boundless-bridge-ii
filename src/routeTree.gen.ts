@@ -23,6 +23,7 @@ import { Route as SupporterIndexRouteImport } from './routes/supporter.index'
 import { Route as SupporterConnectRouteImport } from './routes/supporter.connect'
 import { Route as SupporterLearnRouteImport } from './routes/supporter.learn'
 import { Route as SupporterResourcesRouteImport } from './routes/supporter.resources'
+import { Route as ApiPublicVoiceRouteImport } from './routes/api/public/voice'
 import { Route as ParticipantBuddyIndexRouteImport } from './routes/participant.buddy.index'
 import { Route as ParticipantBuddyMemoryRouteImport } from './routes/participant.buddy.memory'
 import { Route as ParticipantPracticeIdRouteImport } from './routes/participant.practice.$id'
@@ -99,6 +100,11 @@ const SupporterResourcesRoute = SupporterResourcesRouteImport.update({
   path: '/supporter/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicVoiceRoute = ApiPublicVoiceRouteImport.update({
+  id: '/api/public/voice',
+  path: '/api/public/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ParticipantBuddyIndexRoute = ParticipantBuddyIndexRouteImport.update({
   id: '/participant/buddy/',
   path: '/participant/buddy/',
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/supporter/resources': typeof SupporterResourcesRoute
   '/participant/': typeof ParticipantIndexRoute
   '/supporter/': typeof SupporterIndexRoute
+  '/api/public/voice': typeof ApiPublicVoiceRoute
   '/participant/buddy/memory': typeof ParticipantBuddyMemoryRoute
   '/participant/practice/$id': typeof ParticipantPracticeIdRoute
   '/supporter/together/$id': typeof SupporterTogetherIdRoute
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/supporter/resources': typeof SupporterResourcesRoute
   '/participant': typeof ParticipantIndexRoute
   '/supporter': typeof SupporterIndexRoute
+  '/api/public/voice': typeof ApiPublicVoiceRoute
   '/participant/buddy/memory': typeof ParticipantBuddyMemoryRoute
   '/participant/practice/$id': typeof ParticipantPracticeIdRoute
   '/supporter/together/$id': typeof SupporterTogetherIdRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/supporter/resources': typeof SupporterResourcesRoute
   '/participant/': typeof ParticipantIndexRoute
   '/supporter/': typeof SupporterIndexRoute
+  '/api/public/voice': typeof ApiPublicVoiceRoute
   '/participant/buddy/memory': typeof ParticipantBuddyMemoryRoute
   '/participant/practice/$id': typeof ParticipantPracticeIdRoute
   '/supporter/together/$id': typeof SupporterTogetherIdRoute
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/supporter/resources'
     | '/participant/'
     | '/supporter/'
+    | '/api/public/voice'
     | '/participant/buddy/memory'
     | '/participant/practice/$id'
     | '/supporter/together/$id'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/supporter/resources'
     | '/participant'
     | '/supporter'
+    | '/api/public/voice'
     | '/participant/buddy/memory'
     | '/participant/practice/$id'
     | '/supporter/together/$id'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/supporter/resources'
     | '/participant/'
     | '/supporter/'
+    | '/api/public/voice'
     | '/participant/buddy/memory'
     | '/participant/practice/$id'
     | '/supporter/together/$id'
@@ -270,6 +282,7 @@ export interface RootRouteChildren {
   SupporterResourcesRoute: typeof SupporterResourcesRoute
   ParticipantIndexRoute: typeof ParticipantIndexRoute
   SupporterIndexRoute: typeof SupporterIndexRoute
+  ApiPublicVoiceRoute: typeof ApiPublicVoiceRoute
   ParticipantBuddyMemoryRoute: typeof ParticipantBuddyMemoryRoute
   ParticipantPracticeIdRoute: typeof ParticipantPracticeIdRoute
   SupporterTogetherIdRoute: typeof SupporterTogetherIdRoute
@@ -377,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupporterResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/voice': {
+      id: '/api/public/voice'
+      path: '/api/public/voice'
+      fullPath: '/api/public/voice'
+      preLoaderRoute: typeof ApiPublicVoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/participant/buddy/': {
       id: '/participant/buddy/'
       path: '/participant/buddy'
@@ -430,6 +450,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupporterResourcesRoute: SupporterResourcesRoute,
   ParticipantIndexRoute: ParticipantIndexRoute,
   SupporterIndexRoute: SupporterIndexRoute,
+  ApiPublicVoiceRoute: ApiPublicVoiceRoute,
   ParticipantBuddyMemoryRoute: ParticipantBuddyMemoryRoute,
   ParticipantPracticeIdRoute: ParticipantPracticeIdRoute,
   SupporterTogetherIdRoute: SupporterTogetherIdRoute,
