@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mockReply, memoryCandidate, BUDDY_DEFAULTS } from "@/lib/buddy";
+import { mockReply, memoryCandidate, parseBuddyReply, BUDDY_DEFAULTS } from "@/lib/buddy";
 
 describe("AI Buddy rules", () => {
   it("memory is off by default", () => expect(BUDDY_DEFAULTS.memory).toBe(false));
@@ -21,4 +21,27 @@ describe("AI Buddy rules", () => {
   it("does not claim to be human", () =>
     expect(mockReply("are you human?", { memoryOn: false, turn: 1 }).text).toContain("not a person"));
   it("parses remember phrasing", () => expect(memoryCandidate("hello")).toBeUndefined());
+});
+
+describe("live AI reply parsing", () => {
+  const valid = { text: "I hear you.", practice_id: "grounding", offer_talk: false, crisis: false, memory_candidate: null };
+  it("parses a valid model reply", () => {
+    expect(parseBuddyReply(JSON.stringify(valid))).toEqual({
+      text: "I hear you.", practiceId: "grounding", offerTalk: false, crisis: false, memoryCandidate: undefined,
+    });
+  });
+  it("drops unknown practice ids", () => {
+    const r = parseBuddyReply(JSON.stringify({ ...valid, practice_id: "made-up" }));
+    expect(r?.practiceId).toBeUndefined();
+  });
+  it("never suggests a practice on a crisis reply", () => {
+    const r = parseBuddyReply(JSON.stringify({ ...valid, crisis: true, text: "Please call 988." }));
+    expect(r?.crisis).toBe(true);
+    expect(r?.practiceId).toBeUndefined();
+  });
+  it("rejects empty, non-JSON, or textless output", () => {
+    expect(parseBuddyReply("")).toBeNull();
+    expect(parseBuddyReply("not json at all")).toBeNull();
+    expect(parseBuddyReply(JSON.stringify({ ...valid, text: "  " }))).toBeNull();
+  });
 });
