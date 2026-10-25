@@ -9,5 +9,7 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Participant/supporter data (role, favorites, reflections, settings, demo connection) lives in browser localStorage via `src/lib/store.ts`; no backend accounts, so the connection flow is a clearly labeled simulation.
-- Practice content and the feeling→practice mapping live in `src/lib/practices.ts` and work without AI; the AI Practice Guide (`src/lib/guide.functions.ts`) is optional and must fail gracefully.
+# Project rules
+
+- AI Buddy replies come from the scripted `mockReply` in `src/lib/buddy.ts` until a real AI service is connected; swap only the reply source and keep the UI labeled "Practice mode" while scripted — scripted replies must never be shown as live AI.
+- AI Buddy conversations, memories, and settings are device-only (`bb.buddy.*` localStorage keys) and never flow into the supporter connection — participant privacy.
