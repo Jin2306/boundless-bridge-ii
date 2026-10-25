@@ -4,6 +4,7 @@ import { Mic, Square, Send, Volume2, Pause, Play, History, Brain, Plus, Trash2, 
 import { toast } from "sonner";
 import { Shell } from "@/components/Shell";
 import { getPractice } from "@/lib/practices";
+import { askBuddy } from "@/lib/buddy.functions";
 import {
   MAX_LEN, QUICK_STARTS, WELCOME, mockReply, uid, useBuddySettings, useConversations, useMemories,
   type BuddyMsg, type Conversation,
@@ -30,11 +31,12 @@ type SR = { start: () => void; stop: () => void; abort: () => void; onresult: ((
 function BuddyPage() {
   const [settings, setSettings] = useBuddySettings();
   const [convos, setConvos] = useConversations();
-  const [, setMemories] = useMemories();
+  const [memories, setMemories] = useMemories();
   const [convId, setConvId] = useState(() => uid());
   const [messages, setMessages] = useState<BuddyMsg[]>([welcomeMsg()]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
+  const [mode, setMode] = useState<"live" | "practice">("live");
   const [showHistory, setShowHistory] = useState(false);
   const [handled, setHandled] = useState<Record<string, boolean>>({});
   const [recording, setRecording] = useState(false);
@@ -70,7 +72,7 @@ function BuddyPage() {
     setPaused(!paused);
   };
 
-  const send = (raw: string) => {
+  const send = async (raw: string) => {
     const text = raw.trim().slice(0, MAX_LEN);
     if (!text || thinking) return;
     const userMsg: BuddyMsg = { id: uid(), role: "user", text };
@@ -78,16 +80,35 @@ function BuddyPage() {
     setMessages(next);
     setInput("");
     setThinking(true);
-    const turn = next.filter((m) => m.role === "user").length;
-    window.setTimeout(() => {
-      const reply: BuddyMsg = { id: uid(), role: "buddy", ...mockReply(text, { memoryOn: settings.memory, turn }) };
-      const all = [...next, reply];
-      setMessages(all);
-      setThinking(false);
-      persist(all);
-      if (settings.voiceReplies) play(reply);
-      inputRef.current?.focus();
-    }, 700);
+    let reply: Omit<BuddyMsg, "id" | "role">;
+    let live = true;
+    try {
+      const res = await askBuddy({
+        data: {
+          message: text,
+          history: next.slice(0, -1).filter((m) => m.id !== "welcome").slice(-8).map((m) => ({ role: m.role, text: m.text })),
+          memories: settings.memory ? memories.slice(0, 10).map((m) => m.text) : [],
+          memoryOn: settings.memory,
+        },
+      });
+      if (res.ok) {
+        reply = res.reply;
+      } else {
+        toast.error(res.error);
+        live = false;
+        reply = mockReply(text, { memoryOn: settings.memory, turn: next.filter((m) => m.role === "user").length });
+      }
+    } catch {
+      live = false;
+      reply = mockReply(text, { memoryOn: settings.memory, turn: next.filter((m) => m.role === "user").length });
+    }
+    const all: BuddyMsg[] = [...next, { id: uid(), role: "buddy", ...reply }];
+    setMessages(all);
+    setMode(live ? "live" : "practice");
+    setThinking(false);
+    persist(all);
+    if (settings.voiceReplies) play(all[all.length - 1]!);
+    inputRef.current?.focus();
   };
 
   const startRecording = () => {
@@ -110,8 +131,8 @@ function BuddyPage() {
   };
   const stopRecording = () => recRef.current?.stop();
 
-  const newConversation = () => { stopAudio(); setConvId(uid()); setMessages([welcomeMsg()]); setHandled({}); setShowHistory(false); };
-  const openConversation = (c: Conversation) => { stopAudio(); setConvId(c.id); setMessages(c.messages); setHandled({}); setShowHistory(false); };
+  const newConversation = () => { stopAudio(); setConvId(uid()); setMessages([welcomeMsg()]); setHandled({}); setMode("live"); setShowHistory(false); };
+  const openConversation = (c: Conversation) => { stopAudio(); setConvId(c.id); setMessages(c.messages); setHandled({}); setMode("live"); setShowHistory(false); };
 
   const remember = (m: BuddyMsg, yes: boolean) => {
     setHandled((h) => ({ ...h, [m.id]: true }));
@@ -153,9 +174,15 @@ function BuddyPage() {
         </div>
       </div>
       <p className="mt-2 text-sm text-muted-foreground">I'm an AI companion, not a person or therapist.</p>
-      <p className="mt-2 rounded-xl bg-gold/30 px-3 py-2 text-sm font-semibold text-foreground" role="note">
-        Practice mode: replies are scripted examples, not live AI. Everything stays on this device.
-      </p>
+      {mode === "live" ? (
+        <p className="mt-2 rounded-xl bg-sage/30 px-3 py-2 text-sm font-semibold text-foreground" role="note">
+          Live AI: your messages are sent to write replies. They stay on this device{settings.memory ? ", and saved memory notes help write them" : ""} — never shared with supporters.
+        </p>
+      ) : (
+        <p className="mt-2 rounded-xl bg-gold/30 px-3 py-2 text-sm font-semibold text-foreground" role="note">
+          Practice mode: replies are scripted examples, not live AI. Everything stays on this device.
+        </p>
+      )}
 
       {showHistory && (
         <section className="mt-4 card-soft p-4">

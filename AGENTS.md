@@ -11,5 +11,5 @@
 
 # Project rules
 
-- AI Buddy replies come from the scripted `mockReply` in `src/lib/buddy.ts` until a real AI service is connected; swap only the reply source and keep the UI labeled "Practice mode" while scripted — scripted replies must never be shown as live AI.
+- AI Buddy replies come from the live Lovable AI gateway (`askBuddy` in `src/lib/buddy.functions.ts`, which loads the server-only `src/lib/buddy.server.ts` inside the handler; model `openai/gpt-6-astra`, raw `/v1/responses` like `guide.functions.ts`) with the scripted `mockReply` as fallback; when a reply falls back to scripted, the UI must show Practice mode — scripted replies must never be shown as live AI.
 - AI Buddy conversations, memories, and settings are device-only (`bb.buddy.*` localStorage keys) and never flow into the supporter connection — participant privacy.

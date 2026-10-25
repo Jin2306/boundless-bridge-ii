@@ -10,10 +10,10 @@ export type BuddyMsg = {
   id: string;
   role: "user" | "buddy";
   text: string;
-  practiceId?: string;
-  offerTalk?: boolean;
-  crisis?: boolean;
-  memoryCandidate?: string;
+  practiceId?: string | undefined;
+  offerTalk?: boolean | undefined;
+  crisis?: boolean | undefined;
+  memoryCandidate?: string | undefined;
 };
 export type Conversation = { id: string; title: string; updatedAt: string; messages: BuddyMsg[] };
 export type Memory = { id: string; text: string; date: string };
@@ -129,4 +129,51 @@ export function mockReply(input: string, opts: { memoryOn: boolean; turn: number
     "Thanks for sharing that with me. What would feel helpful right now — talking more, or a quiet moment?",
   ];
   return { text: fallbacks[opts.turn % fallbacks.length] ?? fallbacks[0]! };
+}
+
+// ============= Live AI replies =============
+
+export const BUDDY_PRACTICE_IDS = ["grounding", "ten-breaths", "walking", "body-scan", "loving-kindness", "mindfulness", "movement"] as const;
+
+/** Shape the live AI returns, mirroring BuddyMsg's optional fields. */
+export type BuddyAiReply = Omit<BuddyMsg, "id" | "role">;
+
+type ParsedReply = {
+  text?: unknown;
+  practice_id?: unknown;
+  offer_talk?: unknown;
+  crisis?: unknown;
+  memory_candidate?: unknown;
+};
+
+/**
+ * Parse and validate a live AI reply (strict JSON from the model).
+ * Returns null when the output is empty, not JSON, or has no usable text —
+ * the caller then falls back to the scripted mockReply.
+ */
+export function parseBuddyReply(raw: string): BuddyAiReply | null {
+  if (!raw.trim()) return null;
+  let data: ParsedReply;
+  try {
+    data = JSON.parse(raw) as ParsedReply;
+  } catch {
+    return null;
+  }
+  if (typeof data !== "object" || data === null) return null;
+  if (typeof data.text !== "string" || !data.text.trim()) return null;
+  const crisis = data.crisis === true;
+  const practiceId =
+    typeof data.practice_id === "string" && !crisis && (BUDDY_PRACTICE_IDS as readonly string[]).includes(data.practice_id)
+      ? data.practice_id
+      : undefined;
+  const memoryCandidate = typeof data.memory_candidate === "string" && data.memory_candidate.trim()
+    ? data.memory_candidate.trim()
+    : undefined;
+  return {
+    text: data.text.trim(),
+    practiceId,
+    offerTalk: data.offer_talk === true,
+    crisis,
+    memoryCandidate,
+  };
 }
