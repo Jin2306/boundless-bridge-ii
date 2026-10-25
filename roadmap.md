@@ -1,3 +1,3 @@
 # Roadmap
-- [ ] Phone line: call a number and talk to AI Buddy by voice (no smartphone needed)
-- [ ] Connect Twilio after the phone line is built, and point the number at the voice webhook
+- [x] Phone line: call a number and talk to AI Buddy by voice (no smartphone needed)
+- [ ] Connect Twilio, add its Auth Token, and point the number's "A call comes in" webhook at /api/public/voice (waiting on the user)
