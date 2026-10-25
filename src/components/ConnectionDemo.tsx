@@ -14,7 +14,7 @@ export function DemoBanner() {
 
 export async function shareInvite() {
   const text =
-    "I'm using Boundless Bridge for mindfulness. If you'd like to support me, you can open the app and choose \"I'm Here to Support Someone.\" I'll decide what I share with you.";
+    "I'm using Boundless Bridge for mindfulness. If you'd like to support me, you can open the website and choose \"I'm Here to Support Someone.\" I'll decide what I share with you.";
   const url = typeof window !== "undefined" ? window.location.origin : "";
   if (navigator.share) {
     try { await navigator.share({ title: "Boundless Bridge", text, url }); return "shared"; } catch { return "cancelled"; }

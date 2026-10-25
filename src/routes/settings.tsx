@@ -99,7 +99,7 @@ function SettingsPage() {
     <Shell mode={role ?? undefined} back={role === "supporter" ? "/supporter" : role === "participant" ? "/participant" : "/"}>
       <PageTitle title="Settings" />
       <section className="card-soft p-5">
-        <h2 className="text-xl font-semibold text-primary">Who is using the app?</h2>
+        <h2 className="text-xl font-semibold text-primary">Who is using this site?</h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {(["participant", "supporter"] as const).map((r) => (
             <button key={r} aria-pressed={role === r}
@@ -126,7 +126,7 @@ function SettingsPage() {
       <section className="mt-4 card-soft p-5">
         <h2 className="text-xl font-semibold text-primary">Privacy</h2>
         <ul className="mt-2 list-disc space-y-1 pl-6 text-lg">
-          <li>No account needed. You can use the app anonymously.</li>
+          <li>No account needed. You can use the site anonymously.</li>
           <li>Reflections, favorites, and history stay on this device only.</li>
           <li>We never ask for criminal history, location, or ID numbers.</li>
           <li>Nothing is shared with anyone unless you choose to.</li>
