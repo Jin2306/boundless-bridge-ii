@@ -1,4 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
 import { clearBuddyData, useBuddySettings, useConversations, type BuddySettings } from "@/lib/buddy";
 import { Shell, PageTitle } from "@/components/Shell";
 import { clearAllLocalData, useRole, useSettings, type Settings } from "@/lib/store";
@@ -30,6 +32,39 @@ const BUDDY_TOGGLES: { k: keyof BuddySettings; label: string; hint: string }[] =
   { k: "history", label: "Save conversation history", hint: "Past messages, kept on this device only." },
 ];
 
+function OfflineAi() {
+  const [b, setB] = useBuddySettings();
+  const [pct, setPct] = useState<number | null>(null);
+  const download = async () => {
+    const { gemmaSupported, loadGemma } = await import("@/lib/gemma");
+    if (!gemmaSupported()) { toast.error("This browser can't run on-device AI. Try the latest Chrome."); return; }
+    setPct(0);
+    try {
+      await loadGemma((p) => setPct(p));
+      setB((prev) => ({ ...prev, offlineAi: true }));
+      toast.success("Offline AI Buddy is ready.");
+    } catch {
+      toast.error("Download didn't finish. Please try again on Wi-Fi.");
+    }
+    setPct(null);
+  };
+  return (
+    <div className="mt-3 rounded-xl border-2 border-border p-4">
+      <p className="text-lg font-semibold">Offline AI Buddy (Gemma)</p>
+      <p className="text-sm text-muted-foreground">
+        With no internet, AI Buddy runs on this phone. One-time download of about 1.4 GB — use Wi-Fi. Nothing you type or remember leaves the device.
+      </p>
+      {pct !== null ? (
+        <p className="mt-2 text-base font-semibold" role="status">Downloading… {pct}%</p>
+      ) : b.offlineAi ? (
+        <button onClick={() => setB((prev) => ({ ...prev, offlineAi: false }))} className="btn-big mt-2 w-full border-2 border-border text-primary">Turn off offline AI</button>
+      ) : (
+        <button onClick={download} className="btn-big mt-2 w-full bg-primary text-primary-foreground">Download offline AI</button>
+      )}
+    </div>
+  );
+}
+
 function BuddySection() {
   const [b, setB] = useBuddySettings();
   const [, setConvos] = useConversations();
@@ -46,6 +81,7 @@ function BuddySection() {
           </label>
         ))}
       </div>
+      <OfflineAi />
       <div className="mt-3 grid gap-2">
         <Link to="/participant/buddy/memory" className="btn-big border-2 border-primary text-primary">Manage saved memories</Link>
         <button onClick={() => { if (confirm("Delete all saved AI Buddy conversations?")) setConvos([]); }} className="btn-big border-2 border-border text-primary">Delete conversation history</button>

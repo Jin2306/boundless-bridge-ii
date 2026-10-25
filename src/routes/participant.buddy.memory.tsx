@@ -32,7 +32,7 @@ function MemoryPage() {
         <p className="text-base text-muted-foreground">
           When memory is on, AI Buddy asks before saving anything. When it's off, nothing new is saved — memories you already saved stay here until you delete them.
           Memories live only on this device and are never shared with supporters.
-          When memory is on, saved notes are also sent with your messages so AI Buddy can write replies that fit you; turn memory off and nothing is sent.
+          When memory is on and you're online, saved notes are sent with your messages so AI Buddy can write replies that fit you. Offline, the on-device AI uses them without anything leaving this phone. Turn memory off and nothing is used.
         </p>
       </section>
 

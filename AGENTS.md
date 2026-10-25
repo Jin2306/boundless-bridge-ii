@@ -13,3 +13,4 @@
 
 - AI Buddy replies come from the live Lovable AI gateway (`askBuddy` in `src/lib/buddy.functions.ts`, which loads the server-only `src/lib/buddy.server.ts` inside the handler; model `openai/gpt-6-astra`, raw `/v1/responses` like `guide.functions.ts`) with the scripted `mockReply` as fallback; when a reply falls back to scripted, the UI must show Practice mode — scripted replies must never be shown as live AI.
 - AI Buddy conversations, memories, and settings are device-only (`bb.buddy.*` localStorage keys) and never flow into the supporter connection — participant privacy.
+- Offline AI Buddy runs Gemma on-device via @mlc-ai/web-llm (`src/lib/gemma.ts`, dynamically imported only in browser handlers); order is live gateway → on-device Gemma (when downloaded and offline/failing) → scripted Practice mode, and each mode shows its own banner. Crisis detection on-device stays rule-based for reliability.
