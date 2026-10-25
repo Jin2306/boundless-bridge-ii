@@ -62,7 +62,7 @@ const CRISIS = [
 export function memoryCandidate(text: string): string | undefined {
   const m = text.match(/remember (?:that )?(.+)/i);
   if (!m) return undefined;
-  let s = m[1].trim().replace(/[.!]+$/, "");
+  let s = (m[1] ?? "").trim().replace(/[.!]+$/, "");
   s = s.replace(/^my /i, "Your ").replace(/^i /i, "You ").replace(/\bI'm\b/g, "you're").replace(/\bI am\b/g, "you are");
   s = s.replace(/\bmy\b/gi, "your").replace(/\bI\b/g, "you");
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -128,5 +128,5 @@ export function mockReply(input: string, opts: { memoryOn: boolean; turn: number
     "That makes sense. How are you feeling about it right now?",
     "Thanks for sharing that with me. What would feel helpful right now — talking more, or a quiet moment?",
   ];
-  return { text: fallbacks[opts.turn % fallbacks.length] };
+  return { text: fallbacks[opts.turn % fallbacks.length] ?? fallbacks[0]! };
 }
