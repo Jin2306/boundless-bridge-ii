@@ -130,3 +130,46 @@ export function mockReply(input: string, opts: { memoryOn: boolean; turn: number
   ];
   return { text: fallbacks[opts.turn % fallbacks.length] ?? fallbacks[0]! };
 }
+
+// ============= Live AI replies =============
+
+export const BUDDY_PRACTICE_IDS = ["grounding", "ten-breaths", "walking", "body-scan", "loving-kindness", "mindfulness", "movement"] as const;
+
+/** Shape the live AI returns, mirroring BuddyMsg's optional fields. */
+export type BuddyAiReply = {
+  text: string;
+  practiceId?: string;
+  offerTalk?: boolean;
+  crisis?: boolean;
+  memoryCandidate?: string;
+};
+
+/**
+ * Parse and validate a live AI reply (strict JSON from the model).
+ * Returns null when the output is empty, not JSON, or has no usable text —
+ * the caller then falls back to the scripted mockReply.
+ */
+export function parseBuddyReply(raw: string): BuddyAiReply | null {
+  if (!raw.trim()) return null;
+  let data: unknown;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (typeof data !== "object" || data === null) return null;
+  const d = data as Record<string, unknown>;
+  if (typeof d.text !== "string" || !d.text.trim()) return null;
+  const crisis = d.crisis === true;
+  const practiceId = typeof d.practice_id === "string" && !crisis && (BUDDY_PRACTICE_IDS as readonly string[]).includes(d.practice_id)
+    ? d.practice_id
+    : undefined;
+  const memoryCandidate = typeof d.memory_candidate === "string" && d.memory_candidate.trim() ? d.memory_candidate.trim() : undefined;
+  return {
+    text: d.text.trim(),
+    practiceId,
+    offerTalk: d.offer_talk === true,
+    crisis,
+    memoryCandidate,
+  };
+}
