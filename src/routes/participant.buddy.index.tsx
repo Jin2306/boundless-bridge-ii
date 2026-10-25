@@ -275,7 +275,7 @@ function BuddyPage() {
 
       {askVoice && (
         <div className="mt-4 rounded-2xl border-2 border-primary/40 bg-card p-4 text-base">
-          <p>Voice input uses your browser's speech service, which may send audio to your browser maker (for example Google in Chrome) to turn it into text. Nothing is recorded until you tap the microphone, and audio isn't saved by this app.</p>
+          <p>Voice input uses your browser's speech service, which may send audio to your browser maker (for example Google in Chrome) to turn it into text. Nothing is recorded until you tap the microphone, and audio isn't saved by this site.</p>
           <div className="mt-3 flex gap-2">
             <button onClick={() => { setSettings({ ...settings, voiceConsent: true }); setAskVoice(false); }} className="btn-big flex-1 bg-primary text-primary-foreground">I agree</button>
             <button onClick={() => setAskVoice(false)} className="btn-big flex-1 border-2 border-border text-primary">No thanks</button>

@@ -126,14 +126,14 @@ function SettingsPage() {
       <section className="mt-4 card-soft p-5">
         <h2 className="text-xl font-semibold text-primary">Privacy</h2>
         <ul className="mt-2 list-disc space-y-1 pl-6 text-lg">
-          <li>No account needed. You can use the app anonymously.</li>
+          <li>No account needed. You can use the site anonymously.</li>
           <li>Reflections, favorites, and history stay on this device only.</li>
           <li>We never ask for criminal history, location, or ID numbers.</li>
           <li>Nothing is shared with anyone unless you choose to.</li>
           <li>No advertising trackers.</li>
           <li>Practice Guide messages go to an AI service only after you agree.</li>
         </ul>
-        <p className="mt-3 text-base text-muted-foreground">This is a hackathon prototype. It is not certified for sensitive data.</p>
+        <p className="mt-3 text-base text-muted-foreground">This is a hackathon prototype website. It is not certified for sensitive data.</p>
         <button
           onClick={() => { if (confirm("Delete all reflections, favorites, history, and settings on this device?")) { clearAllLocalData(); navigate({ to: "/" }); } }}
           className="btn-big mt-4 w-full border-2 border-destructive text-destructive">

@@ -58,7 +58,7 @@ function Guide() {
           <h2 className="mt-2 text-xl font-semibold text-primary">Before you start</h2>
           <ul className="mt-2 list-disc space-y-1 pl-6 text-lg">
             <li>Your message is sent to an outside AI service to create a reply.</li>
-            <li>It is not saved in this app or shared with anyone you know.</li>
+            <li>It is not saved on this site or shared with anyone you know.</li>
             <li>Don't include names, addresses, or personal history.</li>
             <li>The guide is not a therapist, lawyer, or BFP staff.</li>
           </ul>
