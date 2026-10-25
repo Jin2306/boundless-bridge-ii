@@ -99,7 +99,7 @@ function SettingsPage() {
     <Shell mode={role ?? undefined} back={role === "supporter" ? "/supporter" : role === "participant" ? "/participant" : "/"}>
       <PageTitle title="Settings" />
       <section className="card-soft p-5">
-        <h2 className="text-xl font-semibold text-primary">Who is using the app?</h2>
+        <h2 className="text-xl font-semibold text-primary">Who is using this site?</h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {(["participant", "supporter"] as const).map((r) => (
             <button key={r} aria-pressed={role === r}
@@ -133,7 +133,7 @@ function SettingsPage() {
           <li>No advertising trackers.</li>
           <li>Practice Guide messages go to an AI service only after you agree.</li>
         </ul>
-        <p className="mt-3 text-base text-muted-foreground">This is a hackathon prototype website. It is not certified for sensitive data.</p>
+        <p className="mt-3 text-base text-muted-foreground">This is a hackathon prototype. It is not certified for sensitive data.</p>
         <button
           onClick={() => { if (confirm("Delete all reflections, favorites, history, and settings on this device?")) { clearAllLocalData(); navigate({ to: "/" }); } }}
           className="btn-big mt-4 w-full border-2 border-destructive text-destructive">
